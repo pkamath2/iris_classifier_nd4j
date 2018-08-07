@@ -20,15 +20,11 @@ public class IrisClassifier {
 
     private static Logger log = LoggerFactory.getLogger(IrisClassifier.class);
 
-    static DataSet orig_dataset = null;
-    static DataSet train_dataset = null;
-    static DataSet test_dataset = null;
-
     public static void main(String[] args) {
 
         //1. Load Data from file
         INDArray orig_data = loadData();
-        orig_dataset = new DataSet(orig_data.getColumns(0,1,2,3), orig_data.getColumn(4));
+        DataSet orig_dataset = new DataSet(orig_data.getColumns(0,1,2,3), orig_data.getColumn(4));
         orig_dataset.shuffle();
 
         //2. Split data into Train and Test sets
@@ -48,25 +44,30 @@ public class IrisClassifier {
         INDArray y_test = test_data.getLabels();
         y_test = convertNumLabelsToSoftmaxLabels(y_test.transpose());
 
+        // 3. Initialize weights
         Weights weights = initializeWeights();
 
+        // 4. Fit & Predict
+        log.debug("Fitting.......");
+        log.debug("Starting Shapes X_train & y_train shapes => " + Arrays.toString(X_train.shape())+", "+Arrays.toString(y_train.shape()));
         Map<String, INDArray> params = fitOrPredict(X_train, y_train, weights, X_train.shape()[0],0.1,10);
 
-        log.debug("*************Now Predicting.......");
+        log.debug("Predicting.......");
         Map output = fitOrPredict(X_test, y_test, new Weights(params.get("W1"),params.get("W2"),params.get("W3"),params.get("W4"),
                 params.get("b1"),params.get("b2"),params.get("b3"),params.get("b4")),X_test.shape()[0],0.1,1);
+        log.debug("Predicted output - " + output.get("output"));
+
+        // 5. Print metrics
         Evaluation eval = new Evaluation(3);
-        log.debug(output.get("output").toString());
         eval.eval(y_test, (INDArray)output.get("output"));
         log.info(eval.stats());
     }
 
 
     private static HashMap<String, INDArray> fitOrPredict(INDArray X, INDArray y, Weights weights, int num_samples, double learning_rate, int epoch){
-        log.debug("Starting Shapes X_train & y_train shapes => " + Arrays.toString(X.shape())+", "+Arrays.toString(y.shape()));
         HashMap<String, INDArray> params = new HashMap<>();
 
-        X = X.transpose(); //Transpose to fit the math Y = WX + b
+        X = X.transpose(); //Transpose to fit the math Z = WX + b
         y = y.transpose();
 
         INDArray W1 = weights.getW1();
@@ -127,8 +128,6 @@ public class IrisClassifier {
             W4 = W4.sub(dW4.mul(learning_rate));
             b4 = b4.sub(db4.mul(learning_rate));
 
-            System.out.println(A4);
-
             epoch--;
         }
 
@@ -171,11 +170,6 @@ public class IrisClassifier {
         weights.setW2(W2);
         weights.setW3(W3);
         weights.setW4(W4);
-
-        System.out.println("W1 = " + W1);
-        System.out.println("W2 = " + W2);
-        System.out.println("W3 = " + W3);
-        System.out.println("W4 = " + W4);
 
         return weights;
     }
