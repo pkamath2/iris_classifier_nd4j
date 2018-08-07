@@ -5,9 +5,7 @@ import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.SplitTestAndTrain;
 import org.nd4j.linalg.factory.Nd4j;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Author: purnimakamath
@@ -16,7 +14,7 @@ public class DataLoader {
 
     public static INDArray loadData(){
 
-        try(FileReader fileReader = new FileReader("/Users/purnimakamath/appdir/Github/iris_classifier_nd4j/src/main/resources/iris.csv");
+        try(Reader fileReader = new InputStreamReader(DataLoader.class.getClassLoader().getResourceAsStream("iris.csv"));
             BufferedReader bufferedReader = new BufferedReader(fileReader)){
 
             float[][] data = new float[150][5];
