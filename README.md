@@ -6,7 +6,7 @@ Trying to use ND4J to solve multiclass classification problem. I could use the D
 ![Math in Logistic Regression](https://raw.githubusercontent.com/pkamath2/iris_classifier_nd4j/master/src/main/resources/LR-math.jpg)  
 
 ### Legend for the diagram:  
-Super script [l] : Layer number. 
+Super script [l] : Layer number.  
 W : Weights for the layer.  
 b : Bias  
 Z : Output from one node.   
