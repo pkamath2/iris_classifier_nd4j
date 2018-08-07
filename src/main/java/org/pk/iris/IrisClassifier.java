@@ -148,7 +148,7 @@ public class IrisClassifier {
         Weights weights = new Weights();
         Nd4j.getRandom().setSeed(100);
 
-        INDArray W1 = Nd4j.rand(new int[]{3, 4}).muli(FastMath.sqrt(2.0D/(4+3)));
+        INDArray W1 = Nd4j.rand(new int[]{3, 4}).muli(FastMath.sqrt(2.0D/(4+3)));// Adding variance. 4 & 3 are the number of prev and current nodes.
         INDArray b1 = Nd4j.zeros(3, 1);
 
         INDArray W2 = Nd4j.rand(new int[]{3, 3}).muli(FastMath.sqrt(2.0D/(3+3)));
