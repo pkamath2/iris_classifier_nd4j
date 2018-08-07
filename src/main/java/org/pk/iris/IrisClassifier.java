@@ -131,7 +131,6 @@ public class IrisClassifier {
             epoch--;
         }
 
-
         params.put("W1", W1);
         params.put("W2", W2);
         params.put("W3", W3);
